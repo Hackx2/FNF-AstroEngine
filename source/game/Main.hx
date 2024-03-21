@@ -12,10 +12,6 @@ import openfl.events.Event;
 import openfl.display.StageScaleMode;
 import lime.app.Application;
 
-#if DISCORD_ALLOWED
-import backend.client.Discord.DiscordClient;
-#end
-
 //crash handler stuff
 #if CRASH_HANDLER
 import openfl.events.UncaughtErrorEvent;
@@ -27,7 +23,7 @@ import sys.io.Process;
 #end
 import backend.data.*;
 import game.FPS;
-import game.states.TitleState;
+import game.states.MainState;
 
 using StringTools;
 
@@ -97,8 +93,7 @@ class Main extends Sprite
 			game.height = Math.ceil(stageHeight / game.zoom);
 		}
 	
-		backend.utils.ClientPrefs.loadDefaultKeys();
-		addChild(new FlxGame(game.width, game.height, TitleState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
+		addChild(new FlxGame(game.width, game.height, MainState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 
 		#if !mobile
 		fpsVar = new FPS(10, 3, 0xFFFFFF);
@@ -106,7 +101,7 @@ class Main extends Sprite
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 		if(fpsVar != null) {
-			fpsVar.visible = backend.utils.ClientPrefs.data.showFPS;
+			fpsVar.visible = true;
 		}
 		#end
 
@@ -119,9 +114,7 @@ class Main extends Sprite
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#end
 
-		#if DISCORD_ALLOWED
 		DiscordClient.prepare();
-		#end
 	}
 
 	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!
@@ -161,9 +154,8 @@ class Main extends Sprite
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 
 		Application.current.window.alert(errMsg, "Error!");
-		#if DISCORD_ALLOWED
 		DiscordClient.shutdown();
-		#end
+		
 		Sys.exit(1);
 	}
 	#end

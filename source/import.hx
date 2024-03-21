@@ -1,16 +1,5 @@
 #if !macro 
 
-//Discord API
-#if DISCORD_ALLOWED
-import backend.client.Discord;
-#end
-
-//Psych
-#if LUA_ALLOWED
-import llua.*;
-import llua.Lua;
-#end
-
 #if sys
 import sys.*;
 import sys.io.*;
@@ -18,41 +7,14 @@ import sys.io.*;
 import js.html.*;
 #end
 
-import backend.data.WeekData.*;
-
-import game.objects.characters.*;
-import game.objects.characters.MenuCharacter;
-
-import game.objects.MenuItem;
-import game.objects.TypedAlphabet;
-
-import backend.PlayerSettings;
-
-import backend.CoolUtil;
-
-import game.states.LoadingState;
-import game.objects.FlxUIDropDownMenuCustom;
-
 import backend.utils.Paths;
 
+// BeatStates
 import backend.system.MusicBeatSubstate;
 import backend.system.MusicBeatState;
 
-import backend.utils.Paths;
-import backend.utils.Controls;
-import backend.CoolUtil;
-import backend.system.MusicBeatState;
-import backend.system.MusicBeatSubstate;
-import game.transitions.CustomFadeTransition;
-import backend.utils.ClientPrefs;
-import backend.Conductor;
-
-import game.objects.Alphabet;
-import game.objects.BGSprite;
-
-import game.states.PlayState;
-import game.states.LoadingState;
-
+//Discord
+import backend.client.Discord.DiscordClient;
 
 //Flixel
 import flixel.sound.FlxSound;
@@ -68,6 +30,8 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
+
+import backend.utils.Paths;
 
 using StringTools;
 #end

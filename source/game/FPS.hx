@@ -77,7 +77,6 @@ class FPS extends TextField
 
 		var currentCount = times.length;
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
-		if (currentFPS > backend.utils.ClientPrefs.data.framerate) currentFPS = backend.utils.ClientPrefs.data.framerate;
 
 		if (currentCount != cacheCount /*&& visible*/)
 		{
@@ -92,7 +91,7 @@ class FPS extends TextField
             text += '\nAstro Engine: '+EngineData.mainCoreShit.coreVersion;
 
 			textColor = 0xFFFFFFFF;
-			if (memoryMegas > 3000 || currentFPS <= backend.utils.ClientPrefs.data.framerate / 2)
+			if (memoryMegas > 3000)
 			{
 				textColor = 0xFFFF0000;
 			}

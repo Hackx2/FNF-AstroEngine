@@ -1,7 +1,6 @@
 package backend.client;
 
 import backend.data.EngineData;
-import backend.utils.ClientPrefs;
 import Sys.sleep;
 import lime.app.Application;
 import hxdiscord_rpc.Discord;
@@ -22,12 +21,11 @@ class DiscordClient
 
 	public static function check()
 		{
-			if(ClientPrefs.data.discordRPC) initialize();
-			else if(isInitialized) shutdown();
+			initialize();
 		}
 		public static function prepare()
 			{
-				if (!isInitialized && ClientPrefs.data.discordRPC)
+				if (!isInitialized)
 					initialize();
 		
 				Application.current.window.onClose.add(function() {

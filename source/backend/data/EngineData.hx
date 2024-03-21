@@ -16,12 +16,4 @@ using StringTools;
 		colorMenuImage: 0xff525252,
 		mainRepo: "https://github.com/Hackx2/FNF-AstroEngine",
 	}
-
-	//** ignore this **/
-	public function new()
-	{
-        super();
-		if (backend.utils.ClientPrefs.data.lowQuality)
-			backend.utils.ClientPrefs.data.mouseEvents = false;
-	}
 }
