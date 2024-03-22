@@ -16,7 +16,7 @@ class MainState extends MusicBeatState {
             BG.color = 0xffffb87e;
             add(BG);
 
-            var doShit:FlxButton = new FlxButton(0, 600, "Reload Char", function()
+            var doShit:FlxButton = new FlxButton(0, 600, "Download", function()
                 {
                     tracev2("lmao", 'add');
                 });
