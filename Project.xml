@@ -65,6 +65,10 @@
 	
 	<haxelib name="lime" version="8.1.1"/>
 	<haxelib name="openfl" version="9.3.2"/>
+	<haxelib name="actuate" />
+
+    <haxelib name="haxeui-core" />
+    <haxelib name="haxeui-openfl" />
 	
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-ui" />
