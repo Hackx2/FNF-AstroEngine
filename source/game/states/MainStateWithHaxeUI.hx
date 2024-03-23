@@ -32,7 +32,7 @@ class MainState extends MusicBeatState{
 		BG.color = 0xffffb87e;
 		add(BG);
 
-        laSexyBar = new FlxSprite((FlxG.width - 200) / 2, (FlxG.height - 20) / 2);
+        laSexyBar = new FlxSprite((FlxG.width) / 2, (FlxG.height - 20) / 2);
         laSexyBar.makeGraphic(200, 20, 0xFFFFFAB4);
         laSexyBar.scale.x = 0;
         laSexyBar.visible = false;
