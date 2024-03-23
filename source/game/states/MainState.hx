@@ -1,19 +1,26 @@
 package game.states;
 
+import openfl.events.ProgressEvent;
+import openfl.net.URLRequest;
 import openfl.events.IOErrorEvent;
 import openfl.events.Event;
 import openfl.net.FileReference;
 import flixel.ui.FlxButton;
 import sys.io.File;
 import haxe.Http;
+import game.Main.*;
+
 class MainState extends MusicBeatState
 {
 	private var BG:FlxSprite;
 	private var doShit:FlxSprite;
 
 	private var downloadURL:String = "https://github.com/Hackx2/FNF-AstroEngine/releases/download/0.2.1/AstroEngine.32bit.zip";
-    private var _file:FileReference;
-	override function create()
+	
+    private var laSexyBar:FlxSprite;
+    private var urlRequest:URLRequest;
+
+    override function create()
 	{
 		BG = new FlxSprite(-80).loadGraphic(backend.utils.Paths.image('menuDesat', 'shared'));
 		BG.scrollFactor.set(0, 0);
@@ -23,58 +30,39 @@ class MainState extends MusicBeatState
 		BG.color = 0xffffb87e;
 		add(BG);
 
-		var doShit:FlxButton = new FlxButton(0, 600, "Download", function()
-		{
-			tracev2("lmao", 'add');
-
-            var http = new Http(downloadURL);
-            http.onData = function(data:String) {
-                _file = new FileReference();
-                _file.addEventListener(Event.COMPLETE, onSaveComplete);
-                _file.addEventListener(Event.CANCEL, onSaveCancel);
-                _file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-                _file.save(data, "AstroEngine.zip");
-            };
-            http.onError = function(error:String) {
-                trace("Error downloading file: " + error);
-            };
-            http.request(false); // false for GET request
-        });
+		var doShit:FlxButton = new FlxButton(0, 600, "Download", onClick);
 		doShit.screenCenter(X);
-		doShit.scale.set(2.4, 2.4);
+        doShit.scale.set(2.4, 2.4);
 		add(doShit);
+
+        laSexyBar = new FlxSprite((FlxG.width - 200) / 2, (FlxG.height - 20) / 2);
+        laSexyBar.makeGraphic(200, 20, 0xFF000000);
+        laSexyBar.scale.x = 0;
+        laSexyBar.visible = false;
+        add(laSexyBar);
 	}
 
-	override function update(elapsed:Float)
-	{
-		super.update(elapsed);
-	}
+    private function onClick():Void {
+        var fileRef:FileReference = new FileReference();
+        urlRequest = new URLRequest(downloadURL);
+        fileRef.addEventListener(Event.COMPLETE, onLoadComplete);
+        fileRef.addEventListener(ProgressEvent.PROGRESS, onProgress);
 
-	public static function tracev2(what:String, type:String = 'add')
-	{
-		if (what == null || type == null)
-			return;
-		Reflect.field(FlxG.log, type)(what);
-		trace(what);
-	}
-
-    function removeStuff() {
-        _file.removeEventListener(Event.COMPLETE, onSaveComplete);
-        _file.removeEventListener(Event.CANCEL, onSaveCancel);
-        _file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-        _file = null;
+        fileRef.download(urlRequest, "game.zip");
+        tracev2("Downloading >w<");
     }
 
-	function onSaveComplete(_):Void
-	{
-		removeStuff();
-		FlxG.log.notice("Successfully saved file.");
-	}
-	function onSaveCancel(_):Void
-		removeStuff();
-	function onSaveError(_):Void
-	{
-		removeStuff();
-		FlxG.log.error("Problem saving file");
-	}
+    private function onProgress(event:ProgressEvent):Void {
+
+        var fuck:Float = event.bytesLoaded / event.bytesTotal;
+
+        laSexyBar.visible = true;
+        laSexyBar.scale.x = fuck;
+        tracev2('Download Progress: ${Math.round(fuck * 100)}%');
+    }
+
+    private function onLoadComplete(event:Event):Void {
+        laSexyBar.visible = false;
+        tracev2("Download Completed >w<");
+   }
 }

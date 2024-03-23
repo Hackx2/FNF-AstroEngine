@@ -119,6 +119,15 @@ class Main extends Sprite
 
 	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!
 	// very cool person for real they don't get enough credit for their work
+	
+		
+	public static function tracev2(what:String, type:String = 'add')
+		{
+			if (what == null || type == null)
+				return;
+			Reflect.field(FlxG.log, type)(what);
+			trace(what);
+		}
 	#if CRASH_HANDLER
 	function onCrash(e:UncaughtErrorEvent):Void
 	{
