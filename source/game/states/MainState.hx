@@ -13,33 +13,41 @@ import game.Main.*;
 
 class MainState extends MusicBeatState
 {
+	// Background
 	private var BG:FlxSprite;
 	private var doShit:FlxSprite;
-    var logoBl:FlxSprite;
+    private var logo:FlxSprite;
 
-	private var downloadURL:String;
-
+	//Download Bar Stuff
 	private var laSexyBar:FlxSprite;
 	private var urlRequest:URLRequest;
 
 	// Download Shit
 	private var bit:Float = 64;
-
-	private static var newVersion:String = "1.9.9";
+	private var downloadURL:String;
+	private var newVersion:String = "1.9.9";
 
 	override function create()
 	{
-		BG = new FlxSprite(-80).loadGraphic(backend.utils.Paths.image('menuDesat', 'shared'));
+		BG = new FlxSprite(-80).loadGraphic(backend.utils.Paths.image('bgs/dark', 'shared'));
 		BG.scrollFactor.set(0, 0);
 		BG.setGraphicSize(Std.int(BG.width * 1.175));
 		BG.screenCenter();
-		BG.antialiasing = true;
-		BG.color = 0xffffb87e;
 		add(BG);
+
+		logo = new FlxSprite();
+		logo.frames = Paths.getSparrowAtlas('logoBumpin', 'shared');
+		logo.animation.addByPrefix('whatthefuck', 'logo bumpin', 24, true);
+		logo.animation.play('whatthefuck');
+        logo.scale.set(0.7,0.7);
+        logo.antialiasing = true;
+        logo.setPosition(FlxG.width - (logo.width - 50), -50);
+		add(logo);
 
 		var doShit:FlxButton = new FlxButton(0, 600, "Download", onClick);
 		doShit.screenCenter(X);
 		doShit.scale.set(2.4, 2.4);
+		doShit.x -= 350;
 		add(doShit);
 
 		laSexyBar = new FlxSprite((FlxG.width - 200) / 2, (FlxG.height - 20) / 2);
@@ -47,17 +55,6 @@ class MainState extends MusicBeatState
 		laSexyBar.scale.x = 0;
 		laSexyBar.visible = false;
 		add(laSexyBar);
-
-        logoBl = new FlxSprite();
-		logoBl.frames = backend.utils.Paths.getSparrowAtlas('logoBumpin', 'shared');
-		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, true);
-		logoBl.animation.play('bump');
-        logoBl.scale.set(0.7,0.7);
-		logoBl.updateHitbox();
-        logoBl.antialiasing = true;
-        logoBl.setPosition(FlxG.width- logoBl.width, -50);
-		add(logoBl);
-
 	}
 
     override function update(elapsed:Float)
