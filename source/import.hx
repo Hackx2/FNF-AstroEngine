@@ -7,6 +7,7 @@ import sys.io.*;
 import js.html.*;
 #end
 
+import backend.data.EngineData;
 import backend.utils.Paths;
 
 // BeatStates

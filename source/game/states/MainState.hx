@@ -1,6 +1,5 @@
 package game.states;
 
-import backend.data.EngineData;
 import openfl.events.ProgressEvent;
 import openfl.net.URLRequest;
 import openfl.events.IOErrorEvent;
@@ -15,90 +14,95 @@ class MainState extends MusicBeatState
 {
 	// Background
 	private var BG:FlxSprite;
-	private var doShit:FlxSprite;
-    private var logo:FlxSprite;
+	private var logo:FlxSprite;
 
-	//Download Bar Stuff
+	// Download Bar Stuff
 	private var laSexyBar:FlxSprite;
 	private var urlRequest:URLRequest;
+	private var downloadPercent:FlxText;
 
 	// Download Shit
 	private var bit:Float = 64;
 	private var downloadURL:String;
-	private var newVersion:String = "1.9.9";
+	private var newVersion:String;
+	private var doShit:FlxSprite;
 
 	override function create()
 	{
-		BG = new FlxSprite(-80).loadGraphic(backend.utils.Paths.image('bgs/dark', 'shared'));
+		BG = new FlxSprite().loadGraphic(Paths.image('bgs/lightNormal'));
 		BG.scrollFactor.set(0, 0);
-		BG.setGraphicSize(Std.int(BG.width * 1.175));
 		BG.screenCenter();
 		add(BG);
 
 		logo = new FlxSprite();
-		logo.frames = Paths.getSparrowAtlas('logoBumpin', 'shared');
+		logo.frames = Paths.getSparrowAtlas('logoBumpin');
 		logo.animation.addByPrefix('whatthefuck', 'logo bumpin', 24, true);
 		logo.animation.play('whatthefuck');
-        logo.scale.set(0.7,0.7);
-        logo.antialiasing = true;
-        logo.setPosition(FlxG.width - (logo.width - 50), -50);
+		logo.scale.set(0.9, 0.9);
+		logo.antialiasing = true;
+		logo.screenCenter(XY);
+		logo.y -= 75;
 		add(logo);
 
 		var doShit:FlxButton = new FlxButton(0, 600, "Download", onClick);
 		doShit.screenCenter(X);
-		doShit.scale.set(2.4, 2.4);
-		doShit.x -= 350;
+		doShit.scale.set(2.7, 2.7);
+		//doShit.x -= 350;
 		add(doShit);
 
 		laSexyBar = new FlxSprite((FlxG.width - 200) / 2, (FlxG.height - 20) / 2);
 		laSexyBar.makeGraphic(200, 20, 0xFF000000);
 		laSexyBar.scale.x = 0;
-		laSexyBar.visible = false;
-		add(laSexyBar);
+
+		downloadPercent = new FlxText();
+		downloadPercent.setFormat(Paths.font("PhantomMuff.ttf"), 24, FlxColor.BLACK);
+		downloadPercent.screenCenter();
+		downloadPercent.y += 150;
 	}
 
-    override function update(elapsed:Float)
-        super.update(elapsed);
+	override function update(elapsed:Float)
+		super.update(elapsed);
 
 	private function onClick():Void
 	{
 		var fileRef:FileReference = new FileReference();
 		urlRequest = new URLRequest(downloadURL);
-		fileRef.addEventListener(Event.COMPLETE, onLoadComplete);
-		fileRef.addEventListener(ProgressEvent.PROGRESS, onProgress);
+		fileRef.addEventListener(Event.COMPLETE, complete);
+		fileRef.addEventListener(ProgressEvent.PROGRESS, progress);
 
 		fileRef.download(urlRequest, "game.zip");
 		tracev2("Downloading >w<");
 	}
 
-	private function onProgress(event:ProgressEvent):Void
+	private function progress(event:ProgressEvent):Void
 	{
 		var fuck:Float = event.bytesLoaded / event.bytesTotal;
+		var rounded:Float = Math.round((fuck) * 100);
+		var lastPer = rounded;
 
-		laSexyBar.visible = true;
-		laSexyBar.scale.x = fuck;
-		tracev2('Download Progress: ${Math.round(fuck * 100)}%');
+		add(downloadPercent);
+		downloadPercent.text = '${rounded}%';
+
+		tracev2('Download Progress: $rounded%');
+		//laSexyBar.scale.x = fuck;
 	}
 
-	private function onLoadComplete(event:Event):Void
+	private function complete(event:Event):Void
 	{
-		laSexyBar.visible = false;
+		remove(downloadPercent);
 		tracev2("Download Completed >w<");
 	}
-
 
 	public function new()
 	{
 		super();
 
-		var http = new haxe.Http("https://raw.githubusercontent.com/Hackx2/FNF-AstroEngine/main/gitVersion.txt");
+		var http = new Http("https://raw.githubusercontent.com/Hackx2/FNF-AstroEngine/main/gitVersion.txt");
 
 		http.onData = function(data:String)
 		{
 			newVersion = data.split('\n')[0].trim();
-			trace('FUCK: $newVersion  | $data');
-			var curVersion:String = EngineData.mainCoreShit.coreVersion.trim();
-			trace('version online: ' + newVersion + ', your version: ' + curVersion);
+			trace('version online: ' + newVersion + ', your version: ' + EngineData.mainCoreShit.coreVersion.trim());
 		}
 
 		http.onError = function(error)
