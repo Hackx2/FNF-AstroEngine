@@ -25,7 +25,7 @@ class MainState extends MusicBeatState
 	private var bit:Float = 64;
 	private var downloadURL:String;
 	private var newVersion:String;
-	private var doShit:FlxSprite;
+	private var doShit:FlxButton;
 
 	override function create()
 	{
@@ -44,7 +44,7 @@ class MainState extends MusicBeatState
 		logo.y -= 75;
 		add(logo);
 
-		var doShit:FlxButton = new FlxButton(0, 600, "Download", onClick);
+		doShit = new FlxButton(0, 600, "Download", onClick);
 		doShit.screenCenter(X);
 		doShit.scale.set(2.7, 2.7);
 		//doShit.x -= 350;
@@ -69,9 +69,15 @@ class MainState extends MusicBeatState
 		urlRequest = new URLRequest(downloadURL);
 		fileRef.addEventListener(Event.COMPLETE, complete);
 		fileRef.addEventListener(ProgressEvent.PROGRESS, progress);
+		fileRef.addEventListener(Event.CANCEL, dude);
 
-		fileRef.download(urlRequest, "game.zip");
+		fileRef.download(urlRequest, 'AstroEngine${bit}bit.zip');
+
 		tracev2("Downloading >w<");
+	}
+
+	private function dude(_):Void {
+		return;
 	}
 
 	private function progress(event:ProgressEvent):Void
@@ -80,9 +86,11 @@ class MainState extends MusicBeatState
 		var rounded:Float = Math.round((fuck) * 100);
 		var lastPer = rounded;
 
+		FlxG.watch.addQuick("Downloaded Percent: ", rounded);
+
 		add(downloadPercent);
 		downloadPercent.text = '${rounded}%';
-
+		doShit.visible = false;
 		tracev2('Download Progress: $rounded%');
 		//laSexyBar.scale.x = fuck;
 	}
@@ -90,6 +98,7 @@ class MainState extends MusicBeatState
 	private function complete(event:Event):Void
 	{
 		remove(downloadPercent);
+		doShit.visible = true;
 		tracev2("Download Completed >w<");
 	}
 
