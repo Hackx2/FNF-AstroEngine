@@ -13,6 +13,7 @@ import game.Main.*;
 class MainState extends MusicBeatState
 {
 	// Background
+	private var backOut:FlxSprite;
 	private var BG:FlxSprite;
 	private var logo:FlxSprite;
 
@@ -29,8 +30,9 @@ class MainState extends MusicBeatState
 
 	override function create()
 	{
+
 		BG = new FlxSprite().loadGraphic(Paths.image('bgs/lightNormal'));
-		BG.scrollFactor.set(0, 0);
+		BG.scrollFactor.set(FlxG.mouse.x, FlxG.mouse.y);
 		BG.screenCenter();
 		add(BG);
 
@@ -38,16 +40,15 @@ class MainState extends MusicBeatState
 		logo.frames = Paths.getSparrowAtlas('logoBumpin');
 		logo.animation.addByPrefix('whatthefuck', 'logo bumpin', 24, true);
 		logo.animation.play('whatthefuck');
-		logo.scale.set(0.9, 0.9);
-		logo.antialiasing = true;
 		logo.screenCenter(XY);
 		logo.y -= 75;
+		logo.antialiasing = true;
+		logo.updateHitbox();
 		add(logo);
 
 		doShit = new FlxButton(0, 600, "Download", onClick);
 		doShit.screenCenter(X);
 		doShit.scale.set(2.7, 2.7);
-		//doShit.x -= 350;
 		add(doShit);
 
 		laSexyBar = new FlxSprite((FlxG.width - 200) / 2, (FlxG.height - 20) / 2);
@@ -58,6 +59,17 @@ class MainState extends MusicBeatState
 		downloadPercent.setFormat(Paths.font("PhantomMuff.ttf"), 24, FlxColor.BLACK);
 		downloadPercent.screenCenter();
 		downloadPercent.y += 150;
+
+
+		// Funi Shit
+		backOut = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		backOut.screenCenter();
+		backOut.alpha = 1;
+		add(backOut);
+
+		FlxG.camera.zoom = 5;
+		FlxTween.tween(FlxG.camera, {zoom: 1}, 0.65, {ease: FlxEase.expoOut});
+		FlxTween.tween(backOut, {alpha: 0}, 0.65, {ease: FlxEase.expoOut});
 	}
 
 	override function update(elapsed:Float)
@@ -76,7 +88,8 @@ class MainState extends MusicBeatState
 		tracev2("Downloading >w<");
 	}
 
-	private function dude(_):Void {
+	private function dude(_):Void
+	{
 		return;
 	}
 
@@ -92,7 +105,7 @@ class MainState extends MusicBeatState
 		downloadPercent.text = '${rounded}%';
 		doShit.visible = false;
 		tracev2('Download Progress: $rounded%');
-		//laSexyBar.scale.x = fuck;
+		// laSexyBar.scale.x = fuck;
 	}
 
 	private function complete(event:Event):Void
